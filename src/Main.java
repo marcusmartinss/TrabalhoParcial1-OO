@@ -125,6 +125,7 @@ public class Main {
 				case 1: {
 					menuTemas(input);
 					break;
+					
 				}
 				case 2: {
 					menuPalavras(input);
@@ -134,7 +135,7 @@ public class Main {
 					jogar();
 					break;
 				}
-
+// alo alo
 			}
 			
 		} while ( repeat == true );
