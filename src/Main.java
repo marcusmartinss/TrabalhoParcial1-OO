@@ -148,7 +148,6 @@ public class Main
 			}
 			else
 			{
-				System.out.println("1");
 				for ( int i = 0; i < 50; i++ )
 				{
 					if ( dadosJogo[i][0] == null )
