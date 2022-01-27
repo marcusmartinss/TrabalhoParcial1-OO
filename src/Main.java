@@ -2,23 +2,27 @@ import java.util.Scanner;
 
 public class Main
 {
-	public static char menuExibir(Scanner input)
+	
+	public static char menuExibir( Scanner input )
 	{
-		char opcaoMenu;
+		char escolha;
+		
 		System.out.printf(" Menu\n\n");
 		System.out.println("     1 - Gerenciar temas");
 		System.out.println("     2 - Gerenciar palavras");
 		System.out.println("     3 - Jogar");
 		System.out.println("     4 - Sair");
 		System.out.printf("\n     Escolha uma opção: ");
-			opcaoMenu = input.next().charAt(0);
-		System.out.println();
-	 return opcaoMenu;
+			escolha = input.next().charAt(0);
+		System.out.printf("\n\n");
+	 
+	 return escolha;
 	}
 	
-	public static char menuTemas(Scanner input)
+	public static char menuTemas( Scanner input )
 	{
 		char opcaoMenu;
+		
 		System.out.printf(" Gerenciar temas\n\n");
 		System.out.println("     1 - Cadastrar");
 		System.out.println("     2 - Excluir");
@@ -124,22 +128,23 @@ public class Main
 	{
 		for (int i = 0; i < 50; i++)
 		{
-			if ( dadosJogo[i][0].compareTo(insertTema) == 0 )
-				return true;
+			if ( dadosJogo[i][0] != null )
+			{
+				if ( dadosJogo[i][0].compareTo(insertTema) == 0 )
+					return true;
+			}
 		}
 	 return false;
 	}
 
-	public static void cadastrarTema( String dadosJogo[][] )
+	public static void cadastrarTema( String dadosJogo[][], Scanner input )
 	{
 		if ( existirEspacoTemas(dadosJogo) )
 		{
-			Scanner input = new Scanner(System.in);
+			System.out.printf("     Insira o nome do tema a se cadastrar:\n	");
 			
-			System.out.printf("Insira o nome do tema a se cadastrar:\n	");
-			
-			String insertTema = input.nextLine();
-				insertTema = insertTema.toUpperCase();
+			String insertTema = input.next();
+			insertTema = insertTema.toUpperCase();
 			
 			if ( existirTema(insertTema, dadosJogo) )
 			{
@@ -153,59 +158,87 @@ public class Main
 					if ( dadosJogo[i][0] == null )
 					{
 						dadosJogo[i][0] = insertTema;
+						System.out.printf("	Tema cadastrado com sucesso!\n\n");
 						break;
 					}
 					
 				}
 			}
-			input.close();
 		}
 		else
 		{
 			System.out.println("	ERRO! Sao suportados apenas 50 temas.");
 			System.out.println("	Exclua temas para cadastrar novos.");
 		}
-
 	}
 	
-	public static void excluirTema( String[][] dadosJogo, Scanner input )
+	public static int posicaoTema( String[][] dadosJogo, String insertTema )
 	{
+		int i;
+		
+		for ( i = 0; i < 50; i++ )
+		{
+			if ( dadosJogo[i][0] != null )
+			{
+				if ( dadosJogo[i][0].compareTo(insertTema) == 0 )
+					break;
+			}
+		}
+	 return i;
+	}
+	
+	public static boolean existemPalavrasNoTema( String[][] dadosJogo, String insertTema ) {
+		
+		for ( int i = 0; i < 51; i++ )
+		{
+			if ( dadosJogo[posicaoTema(dadosJogo, insertTema)][i] != null ) {
+				return true;
+			}
+		}
+	 return false;
+	}
+	
+	public static void excluirTema( String[][] dadosJogo )
+	{
+		Scanner input = new Scanner(System.in);
+		
 		String insertTema;
 		
-		System.out.print("Qual tema deseja excluir? ");
-			insertTema = input.nextLine();
+		System.out.print("     Qual tema deseja excluir? ");
+			insertTema = input.next();
 			insertTema = insertTema.toUpperCase();
 			
 		if ( existirTema(insertTema, dadosJogo) )
 		{
-			for (int i = 0; i < 50; i++)
+			if ( quantidadePalavras(dadosJogo, insertTema) > 0 )
 			{
-				if ( dadosJogo[i][0] == insertTema )
-					dadosJogo[i][0] = null;
+				System.out.printf("	ERRO! O tema inserido possui " + quantidadePalavras(dadosJogo, insertTema) + " palavras cadastradas\n\n");
 			}
-			System.out.println("Tema excluido com sucesso!");
+			else
+			{
+				int posTema = posicaoTema(dadosJogo, insertTema);
+				dadosJogo[posTema][0] = null;
+				
+				System.out.println("	Tema excluido com sucesso!");
+			}
 		}
 		else
 		{
 			System.out.println("ERRO! O tema inserido nao foi encontrado.");
 		}
+	 input.close();
 	}
+	
 	
 	public static int quantidadePalavras( String[][] dadosJogo, String insertTema ) {
 		
-		int i, qtd = 0, posicaoTema;
+		int i, qtd = 0;
 		
-		for ( i = 0; i < 50; i++)
-		{
-			if ( dadosJogo[i][0] == insertTema )
-				break;
-		}
-		
-		posicaoTema = i;
+		int posTema = posicaoTema(dadosJogo, insertTema);
 		
 		for ( i = 1; i < 51; i++ )
 		{
-			if ( dadosJogo[posicaoTema][i] != null )
+			if ( dadosJogo[posTema][i] != null )
 			{
 				qtd++;
 			}
@@ -213,8 +246,10 @@ public class Main
 	 return qtd;
 	}
 	
-	public static void buscarTema( String[][] dadosJogo, Scanner input )
+	public static void buscarTema( String[][] dadosJogo )
 	{
+		Scanner input = new Scanner(System.in);
+		
 		String insertTema;
 		
 		System.out.print("Qual tema deseja buscar? ");
@@ -229,6 +264,7 @@ public class Main
 		{
 			System.out.println("O tema buscado não foi encontrado.");
 		}
+	 input.close();
 	}
 	
 	public static boolean existirEspacoPalavra( String[][] dadosJogo, char temaEscolhido )
@@ -277,20 +313,28 @@ public class Main
 		
 	}
 	
+	public static char opcaoMenu() {
+		Scanner input = new Scanner(System.in);
+		char opcao;
+			opcao = input.next().charAt(0);
+			input.next();
+	 input.close();
+	 return opcao;
+	}
+	
 	public static void main(String[] args)
 	{
 		Scanner input = new Scanner(System.in);
 		
-		boolean repeat;
+		boolean repeat, voltar = false;
 		char opcao;
 		
 		String[][] dadosJogo = new String[50][51];
-		
+			
 			iniciarTemas(dadosJogo);
-		
+			
 		do
 		{
-			
 			do
 			{
 				repeat = false;
@@ -302,28 +346,35 @@ public class Main
 					System.out.printf("\n	Insira uma opção válida!\n");
 				}
 				
-			} while ( repeat == true );
+			} while ( repeat );
 			
 			switch ( opcao )
 			{
 				case '1': {
 					
-					do {
+					do
+					{
+						voltar = false;
 						repeat = false;
 						
-						switch ( menuTemas(input) )
+						opcao = menuTemas(input);
+						
+						switch ( opcao )
 						{
 							case '1':
-								cadastrarTema(dadosJogo);
+								cadastrarTema(dadosJogo, input);
+								voltar = true;
 								break;
 							case '2':
-								excluirTema(dadosJogo, input);
+								excluirTema(dadosJogo);
+								voltar = true;
 								break;
 							case '3':
-								buscarTema(dadosJogo, input);
+								buscarTema(dadosJogo);
+								voltar = true;
 								break;
 							case '4':
-								repeat = true;
+								voltar = true;
 								break;
 							default:
 								System.out.println("ERRO! Opcao invalida.");
@@ -343,12 +394,13 @@ public class Main
 				}
 			}
 			
-		} while ( repeat == true );
+		} while ( repeat || voltar );
 			
 		
-		input.close();
+	 input.close();
 	}
 
 }
+
 
 // toUpperCase()
