@@ -1,10 +1,15 @@
 public class teste {
 
 	public static void main(String[] args) {
-		String testando = "aula 1 peae";
-			System.out.println(testando);
-		testando = testando.toUpperCase();
-			System.out.println(testando);
+		
+		System.out.println("  FIM DE JOGO! VOCE PERDEU :(");
+		System.out.println("          ______");
+		System.out.println("         |      |");
+		System.out.println("         |      O");
+		System.out.println("         |     /|\\");
+		System.out.println("         |     / \\");
+		System.out.println("         |");
+		
 	}
 
 }
